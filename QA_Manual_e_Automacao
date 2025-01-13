@@ -1,0 +1,63 @@
+# Teste de QA Manual e Automação (Web e API)
+
+# Parte Manual (Gherkin):
+
+# Cenário: Busca de Produto
+# Funcionalidade: Realizar busca de produto no site Advantage Online Shopping
+
+Scenario: Busca de um produto
+  Given I navigate to "https://advantageonlineshopping.com"
+  When I enter "mouse" in the search bar
+  And I press the search button
+  Then I should see a list of products matching "mouse"
+
+# Cenário: Adicionar Produto ao Carrinho
+# Funcionalidade: Incluir produto no carrinho e validar na tela de pagamento
+Scenario: Adicionar produto ao carrinho
+  Given I have searched for "mouse"
+  When I click on "Add to cart" for the selected product
+  And I proceed to the payment screen
+  Then I should see the product listed in the cart
+
+---
+
+# Automação de Testes Web com Cypress
+
+# Estrutura básica do projeto
+# Dependências: Cypress, Cucumber
+
+# Instalação
+# Comandos para inicializar o projeto:
+# 1. npm init -y
+# 2. npm install cypress @cypress/cucumber-preprocessor
+
+# Arquivo Cypress (cypress/integration/tests.feature)
+# Teste automatizado baseado no Gherkin acima
+
+Feature: Teste funcional no site Advantage Online Shopping
+
+  Scenario: Busca de um produto
+    Given I visit "https://advantageonlineshopping.com"
+    When I search for "mouse"
+    Then I should see products related to "mouse"
+
+  Scenario: Adicionar produto ao carrinho
+    Given I search for "mouse"
+    When I add the first product to the cart
+    And I navigate to the payment screen
+    Then I should see the product in the cart
+
+# Comandos Cypress (cypress/support/commands.js)
+
+Cypress.Commands.add('searchForProduct', (product) => {
+  cy.get('#searchInput').type(product);
+  cy.get('#searchButton').click();
+});
+
+Cypress.Commands.add('addToCart', () => {
+  cy.get('.add-to-cart-button').first().click();
+});
+
+Cypress.Commands.add('validateCart', (product) => {
+  cy.get('.cart-items').should('contain', product);
+});
